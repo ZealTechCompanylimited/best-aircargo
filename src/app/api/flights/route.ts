@@ -1,79 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 
-// GET all flights
-export async function GET() {
-  try {
-    const { data: flights, error } = await supabaseServer
-      .from("flights")
-      .select("*")
-      .order("departure_time");
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(flights);
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
-
-// POST a new flight
-export async function POST(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      id,
-      route,
-      departure_time,
-      arrival_time,
-      operating_days,
-      status,
-      duration,
-    } = body;
+    const { status, route, departure_time, arrival_time, operating_days, duration } = body;
 
-    const { data: flight, error } = await supabaseServer
-      .from("flights")
-      .insert([
-        {
-          id,
-          route,
-          departure_time,
-          arrival_time,
-          operating_days,
-          status: status || "On Time",
-          duration,
-        },
-      ])
-      .select()
-      .single();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(flight, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
-}
-
-// PUT - Update flight by ID
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const body = await request.json();
-    const {
-      status,
-      route,
-      departure_time,
-      arrival_time,
-      operating_days,
-      duration,
-    } = body;
+    const id = request.nextUrl.pathname.split("/").pop(); // Extract [id] from URL
 
     const { data: flight, error } = await supabaseServer
       .from("flights")
@@ -86,7 +19,7 @@ export async function PUT(
         duration,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single();
 
@@ -100,13 +33,11 @@ export async function PUT(
   }
 }
 
-// DELETE - Delete flight by ID
-export async function DELETE(
-  _request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { error } = await supabaseServer.from("flights").delete().eq("id", params.id);
+    const id = request.nextUrl.pathname.split("/").pop(); // Extract [id] from URL
+
+    const { error } = await supabaseServer.from("flights").delete().eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
