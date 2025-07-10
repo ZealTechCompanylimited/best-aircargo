@@ -26,7 +26,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     return NextResponse.json(flight)
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
@@ -40,7 +40,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 
     return NextResponse.json({ message: "Flight deleted successfully" })
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

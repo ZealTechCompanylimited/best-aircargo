@@ -3,10 +3,10 @@ import { supabaseServer } from "@/lib/supabase-server"
 
 export async function GET() {
   try {
-    const { data: flights, error } = await supabaseServer.from("flights").select("*").order("departure_time")
+    const { data: flights, error: dbError } = await supabaseServer.from("flights").select("*").order("departure_time")
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (dbError) {
+      return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
     return NextResponse.json(flights)
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { id, route, departure_time, arrival_time, operating_days, status, duration } = body
 
-    const { data: flight, error } = await supabaseServer
+    const { data: flight, error: dbError } = await supabaseServer
       .from("flights")
       .insert([
         {
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
       .select()
       .single()
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (dbError) {
+      return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
     return NextResponse.json(flight, { status: 201 })
@@ -51,7 +51,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const body = await request.json()
     const { status, route, departure_time, arrival_time, operating_days, duration } = body
 
-    const { data: flight, error } = await supabaseServer
+    const { data: flight, error: dbError } = await supabaseServer
       .from("flights")
       .update({
         status,
@@ -66,8 +66,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       .select()
       .single()
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (dbError) {
+      return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
     return NextResponse.json(flight)
@@ -78,10 +78,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
-    const { error } = await supabaseServer.from("flights").delete().eq("id", params.id)
+    const { error: dbError } = await supabaseServer.from("flights").delete().eq("id", params.id)
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (dbError) {
+      return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
     return NextResponse.json({ message: "Flight deleted successfully" })

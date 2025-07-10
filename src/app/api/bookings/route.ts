@@ -22,6 +22,7 @@ export async function GET() {
 
     return NextResponse.json(bookings)
   } catch (err) {
+    console.error("Error fetching bookings:", err)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(booking, { status: 201 })
   } catch (err) {
+    console.error("Error creating booking:", err)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

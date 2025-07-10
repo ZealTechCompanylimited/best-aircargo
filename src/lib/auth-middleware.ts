@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
 
 interface DecodedToken {
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export function verifyToken(token: string) {
