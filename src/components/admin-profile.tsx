@@ -75,42 +75,56 @@ export default function AdminProfile() {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("Form submitted with data:", profileData)
+
     setSaving(true)
     setError("")
     setMessage("")
 
     try {
+      const token = localStorage.getItem("admin_token")
+      console.log("Token exists:", !!token)
+
       const response = await fetch("/api/admin/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(profileData),
       })
 
+      console.log("Response status:", response.status)
+
       const data = await response.json()
+      console.log("Response data:", data)
 
       if (response.ok) {
-        setMessage("Profile updated successfully")
+        setMessage(data.message || "Profile updated successfully")
+
+        // Update local state
         setProfile(data)
         setProfileData({
           name: data.name,
           email: data.email,
         })
+
         // Update auth context if email changed
         if (data.email !== user?.email) {
           const updatedUser = { ...user, name: data.name, email: data.email }
           localStorage.setItem("admin_user", JSON.stringify(updatedUser))
+          console.log("Auth context updated")
         }
 
-        // Clear message after 3 seconds
-        setTimeout(() => setMessage(""), 3000)
+        // Clear message after 5 seconds
+        setTimeout(() => setMessage(""), 5000)
       } else {
+        console.error("Update failed:", data.error)
         setError(data.error || "Failed to update profile")
       }
     } catch (error) {
-      setError("Failed to update profile")
+      console.error("Network error:", error)
+      setError("Network error: Failed to update profile")
     } finally {
       setSaving(false)
     }
@@ -118,6 +132,8 @@ export default function AdminProfile() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("Password change form submitted")
+
     setSaving(true)
     setError("")
     setMessage("")
@@ -135,11 +151,14 @@ export default function AdminProfile() {
     }
 
     try {
+      const token = localStorage.getItem("admin_token")
+      console.log("Password change - Token exists:", !!token)
+
       const response = await fetch("/api/admin/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           currentPassword: passwordData.currentPassword,
@@ -147,23 +166,28 @@ export default function AdminProfile() {
         }),
       })
 
+      console.log("Password change response status:", response.status)
+
       const data = await response.json()
+      console.log("Password change response data:", data)
 
       if (response.ok) {
-        setMessage("Password changed successfully")
+        setMessage(data.message || "Password changed successfully")
         setPasswordData({
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
         })
 
-        // Clear message after 3 seconds
-        setTimeout(() => setMessage(""), 3000)
+        // Clear message after 5 seconds
+        setTimeout(() => setMessage(""), 5000)
       } else {
+        console.error("Password change failed:", data.error)
         setError(data.error || "Failed to change password")
       }
     } catch (error) {
-      setError("Failed to change password")
+      console.error("Password change network error:", error)
+      setError("Network error: Failed to change password")
     } finally {
       setSaving(false)
     }
@@ -185,6 +209,32 @@ export default function AdminProfile() {
     )
   }
 
+  const testConnection = async () => {
+    try {
+      const token = localStorage.getItem("admin_token")
+      console.log("Testing connection with token:", !!token)
+
+      const response = await fetch("/api/admin/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      console.log("Test response status:", response.status)
+      const data = await response.json()
+      console.log("Test response data:", data)
+
+      if (response.ok) {
+        setMessage("Connection test successful")
+      } else {
+        setError(`Connection test failed: ${data.error}`)
+      }
+    } catch (error) {
+      console.error("Connection test error:", error)
+      setError("Connection test failed")
+    }
+  }
+
   return (
     <div className="space-y-6">
       {message && (
@@ -198,6 +248,13 @@ export default function AdminProfile() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+
+      {/* Add this temporarily after the error/message alerts for debugging */}
+      <div className="mb-4">
+        <Button onClick={testConnection} variant="outline" size="sm">
+          Test Connection
+        </Button>
+      </div>
 
       <Card>
         <CardHeader>
