@@ -436,7 +436,7 @@ export default function AdminProfile() {
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• At least 6 characters long</li>
                     <li>• Use a strong, unique password</li>
-                    <li>• Don't reuse old passwords</li>
+                    <li>• Don&apos;t reuse old passwords</li>
                     <li>• Consider using a password manager</li>
                   </ul>
                 </div>

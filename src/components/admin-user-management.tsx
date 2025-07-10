@@ -61,8 +61,9 @@ export default function AdminUserManagement() {
         const data = await response.json()
         setUsers(data)
       }
-    } catch (error) {
-      console.error("Error fetching users:", error)
+    } catch (err) {
+      console.error("Error fetching users:", err)
+      setError("Failed to fetch users")
     } finally {
       setLoading(false)
     }
@@ -93,7 +94,8 @@ export default function AdminUserManagement() {
       } else {
         setError(data.error || "Failed to create user")
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("Error creating user:", err)
       setError("Failed to create user")
     }
   }
@@ -131,7 +133,8 @@ export default function AdminUserManagement() {
       } else {
         setError(data.error || "Failed to update password")
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("Error updating password:", err)
       setError("Failed to update password")
     }
   }

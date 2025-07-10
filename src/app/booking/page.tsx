@@ -91,7 +91,7 @@ export default function BookingPage() {
       } else {
         alert("There was an error processing your booking. Please try again.")
       }
-    } catch (error) {
+    } catch {
       alert("There was an error processing your booking. Please try again.")
     }
   }

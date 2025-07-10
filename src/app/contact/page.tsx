@@ -40,7 +40,7 @@ export default function ContactPage() {
       } else {
         alert("There was an error sending your message. Please try again.")
       }
-    } catch (error) {
+    } catch {
       alert("There was an error sending your message. Please try again.")
     }
   }

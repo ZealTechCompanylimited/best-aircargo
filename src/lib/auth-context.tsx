@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const parsedUser = JSON.parse(userData)
         setUser(parsedUser)
       } catch (error) {
+        console.error("User data parsing error:", error)
         localStorage.removeItem("admin_token")
         localStorage.removeItem("admin_user")
       }

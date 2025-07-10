@@ -193,9 +193,9 @@ export default function TrackingPage() {
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold mb-2">Can't find your tracking number?</h3>
+                    <h3 className="font-semibold mb-2">Can&apos;t find your tracking number?</h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      Your tracking number was provided in your booking confirmation email. It usually starts with "BAC"
+                      Your tracking number was provided in your booking confirmation email. It usually starts with &quot;BAC&quot;
                       followed by 8 digits.
                     </p>
                   </div>

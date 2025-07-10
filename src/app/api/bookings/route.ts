@@ -21,7 +21,7 @@ export async function GET() {
     }
 
     return NextResponse.json(bookings)
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(booking, { status: 201 })
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

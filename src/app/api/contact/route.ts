@@ -27,6 +27,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(contact, { status: 201 })
   } catch (error) {
+    console.error("Contact POST error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
@@ -44,6 +45,7 @@ export async function GET() {
 
     return NextResponse.json(messages)
   } catch (error) {
+    console.error("Contact GET error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
